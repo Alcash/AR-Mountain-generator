@@ -1,0 +1,12 @@
+/.vs
+/arcade_Data
+/QCAR
+/UnityPackageManager
+/Temp
+/cache
+/Library
+/ProjectSettings
+*.csproj
+/Library/ShaderCache
+princess-hunter.userprefs
+*.sln
