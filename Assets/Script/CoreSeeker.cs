@@ -17,8 +17,7 @@ public class CoreSeeker : MonoBehaviour, ITrackableEventHandler
     int squadCount = 8;
 
     public UnityEngine.UI.Image img;
-    public GameObject[] mazeArray = new GameObject[8 * 8];
-    MeshRenderer[] wallRenderer;
+   
    
     TrackableBehaviour mTrackableBehaviour;
 
@@ -28,7 +27,7 @@ public class CoreSeeker : MonoBehaviour, ITrackableEventHandler
 
     void Start()
     {
-        wallRenderer = new MeshRenderer[squadCount * squadCount];
+       
         if (FreezeEnable && RenderCamera) RenderCamera.enabled = false;
 
         ParsingMazeArray();
@@ -49,8 +48,7 @@ public class CoreSeeker : MonoBehaviour, ITrackableEventHandler
             // int indexX = int.Parse(arrayName[2]);
             // int indexY = int.Parse(arrayName[3].Substring(1,1));
             // mazeArray[indexX + indexX* indexY] = go;
-            mazeArray[i] = go;
-            wallRenderer[i] = go.GetComponent<MeshRenderer>();
+          
         }
 
 
@@ -70,7 +68,7 @@ public class CoreSeeker : MonoBehaviour, ITrackableEventHandler
         StartParsingTexture();
     }
 
-    void StartParsingTexture()
+    public void StartParsingTexture()
     {
 
 
@@ -90,10 +88,14 @@ public class CoreSeeker : MonoBehaviour, ITrackableEventHandler
         RenderTexture.active = null;
 
         yield return null;
-        Texture2D text = new Texture2D(tex.width - 90, tex.height - 90);
+        // Texture2D text = new Texture2D(tex.width - 90, tex.height - 90);
 
-        Color[] workColor = tex.GetPixels(40, 40, text.width, text.height);       
-        
+        // Color[] workColor = tex.GetPixels(40, 40, text.width, text.height);       
+
+        Texture2D text = new Texture2D(tex.width, tex.height);
+
+        Color[] workColor = tex.GetPixels(0, 0, text.width, text.height);       
+
         text.SetPixels(0, 0, text.width, text.height, workColor);
         text.Apply();
 
@@ -110,17 +112,7 @@ public class CoreSeeker : MonoBehaviour, ITrackableEventHandler
                
     }
 
-    public Transform GetFirstEmpty()
-    {
-        foreach (GameObject go in mazeArray)
-        {
-            if (go.activeSelf == false)
-            {
-                return go.transform;
-            }
-        }
-        return null;
-    }
+   
 
     Color GetAvarageColor(Texture2D texture, int x, int y)
     {

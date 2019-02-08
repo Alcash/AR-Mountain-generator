@@ -44,11 +44,11 @@ MonoBehaviour:
       ContainsMagnet: 0
   databaseLoad:
     dataSetsToLoad:
-    - marker_maze
+    - markers
     - VuforiaMars_VuMark
     - VuforiaMars_Images
     dataSetsToActivate:
-    - marker_maze
+    - markers
     - VuforiaMars_VuMark
     - VuforiaMars_Images
   videoBackground:

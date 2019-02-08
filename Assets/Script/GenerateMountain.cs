@@ -5,13 +5,13 @@ using UnityEngine;
 public class GenerateMountain : MonoBehaviour {
 
     public UnityEngine.UI.Image img;
-    float satTreshhold = 0.2f;
-    float brightTreshhold = 0.95f;
+    float satTreshhold = 0.3f; // насыщенность
+    float brightTreshhold = 0.95f; // яркость
     int coreAvaregeColor = 3;
     CoreSeeker coreSeeker;
 
     public float size = 0.1f;
-    public int gridSize = 64;
+    public int gridSize = 512;
 
     private MeshFilter filter;
     Renderer rendererMesh;
@@ -32,18 +32,16 @@ public class GenerateMountain : MonoBehaviour {
 
     void Generate(Texture2D texture)
     {
-        
-       // Texture2D texture = new Texture2D(1, 1);
-        
-       // texture.LoadRawTextureData(core);
 
-       // texture.Apply();
-       // Debug.Log("textureByte " + core.Length);
-        Debug.Log("texture width " + texture.width + "  height " + texture.height);
+        // Texture2D texture = new Texture2D(1, 1);
 
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
+        // texture.LoadRawTextureData(core);
 
-        img.sprite = sprite; //Image is a defined reference to an image component
+        // texture.Apply();
+        // Debug.Log("textureByte " + core.Length);
+        Texture2D textureSet = new Texture2D(texture.width, texture.height);
+
+       
 
 
         heightSquad = new float[gridSize+1,gridSize+1];
@@ -67,34 +65,44 @@ public class GenerateMountain : MonoBehaviour {
                 Color.RGBToHSV(color,out H, out S, out V);
                 //Debug.Log("color " + color);
                 Debug.Log("H " + H + " S " + S + " V " + V);
-
+                Color colorSet = new Color();
                 if (S > satTreshhold && V < brightTreshhold)
                 {
-                    heightSquad[y, x] = (H / 1);
+                    heightSquad[y, x] = (H);
                     Debug.Log("heightSquad[x, y] " + heightSquad[y, x]);
 
-                    
+                    color = Color.HSVToRGB(H, S, V);
                 }
                 else
                 {
                    
                    
                     heightSquad[y, x] = 0;
+                    color = Color.HSVToRGB(H, 0, 255);
 
                 }
 
-                
-
+                for (int indX = 0; indX < pixelHeightInSquad; indX++)
+                {
+                    for (int indY = 0; indY < pixelwidthInSquad; indY++)
+                    {
+                        textureSet.SetPixel(y* pixelwidthInSquad + indY, x* pixelHeightInSquad + indX, color);
+                    }
+                }
             }
         }
-        
 
+
+        textureSet.Apply();
+        Sprite sprite = Sprite.Create(textureSet, new Rect(0, 0, textureSet.width, textureSet.height), new Vector2(.5f, .5f));
+
+        img.sprite = sprite; //Image is a defined reference to an image component
         filter.mesh = GenerateMesh(heightSquad);
-        rendererMesh.material.SetTexture("_MainTex", texture);
+        rendererMesh.material.SetTexture("_MainTex", textureSet);
 
     }
 
-    Color GetAvarageColor(Texture2D texture, int x, int y)
+        Color GetAvarageColor(Texture2D texture, int x, int y)
     {
         
         float cRed = 0, cBlue = 0, cGreen = 0;
